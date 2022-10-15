@@ -4,10 +4,10 @@ import (
 	tele "gopkg.in/telebot.v3"
 )
 
-func (l Localisations) OnstartChat(c tele.Context) error {
-
-	return c.Send("On Start msg")
-}
+//func (l Localisations) OnstartChat(c tele.Context) error {
+//
+//	return c.Send("On Start msg")
+//}
 
 func MessageProcessing(c tele.Context) error {
 	return c.Send(c.Sender().LanguageCode)

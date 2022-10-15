@@ -22,7 +22,7 @@ func StartBot(token string, infoLog *log.Logger, errorLog *log.Logger) {
 
 	infoLog.Println("Reading bot response dictionary")
 
-	b.Handle("/start", OnstartChat)
+	//b.Handle("/start", OnstartChat)
 
 	b.Handle(tele.OnText, MessageProcessing)
 
