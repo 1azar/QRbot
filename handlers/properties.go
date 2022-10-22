@@ -14,6 +14,7 @@ type Properties struct {
 }
 
 type BotsWords struct {
+	// TODO make concurrency save access to fields
 	Greeting string   `json:"greeting" validate:"required"`
 	ReadyMsg []string `json:"ready_msg"  validate:"required"`
 }

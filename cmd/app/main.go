@@ -2,22 +2,14 @@ package main
 
 import (
 	"QRbot/handlers"
-	"QRbot/internal/qrbot"
-	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/go-playground/validator"
-	"golang.org/x/text/language"
 	"log"
 	"os"
-	"path/filepath"
-	"strings"
 	//"path/filepath"
 )
 
 func main() {
-	//TODO decompose main:
-
 	// flags determination and parsing:
 	token := flag.String("token", "TELEGRAM_APITOKEN_QRBOT", "Bot token or the name of a system variable containing the token")
 	langDir := flag.String("langDir", ".", "Folder where localization jsons files are located.\n"+
@@ -26,13 +18,22 @@ func main() {
 	makeLanguageJSON := flag.Bool("makeLangJSON", false, "Generates in current directory localization JSON files named as en.json")
 	flag.Parse()
 
-	fmt.Println(langDir, makeLanguageJSON)
+	// generate bot responses dictionary if '-makeLangJSON' are provided
+	if *makeLanguageJSON {
+		generateJSONen()
+		currentDir, err := os.Getwd()
+		if err != nil {
+			panic("couldn't get dir path")
+		}
+		fmt.Println(" 'en.json' file has been generated: ", currentDir)
+		return
+	}
 
 	// props type contain all required settings and handlers for the bot.
 	// upcoming steps below will set values for every field in the props type.
 	props := handlers.Properties{}
 
-	// initialise loggers:
+	// initialise props loggers:
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 	props.InfoLog = infoLog
@@ -50,48 +51,20 @@ func main() {
 	props.Token = token
 
 	//searching and reading localization .json files:
-	props.InfoLog.Println("Searching for localisation JSON files..")
-	files, err := os.ReadDir(*langDir)
-	if err != nil {
-		props.ErrLog.Fatal(err)
+	readLocalizationJson(&props, langDir)
+	if len(props.Lang) == 0 {
+		props.ErrLog.Fatal("Couldn't find any valid localisation json for the bot. " +
+			"Pleas see -help for '-makeLanguageJSON' flag.")
 	}
-	var bw handlers.BotsWords
-	validate := validator.New()
-	tmpLang := make(map[string]handlers.BotsWords)
-	for _, file := range files {
-		fileName := strings.TrimSuffix(file.Name(), filepath.Ext(file.Name()))
-		fileExt := filepath.Ext(file.Name())
-		langID := language.All.Make(fileName).String()
-		if fileExt != ".json" {
-			continue
-		}
-		if langID == "und" {
-			continue
-		}
-		props.InfoLog.Println(fmt.Sprintf("Checking for %s file \n", file.Name()))
-		byteJson, err := os.ReadFile(filepath.Join(*langDir, file.Name()))
-		if err != nil {
-			props.ErrLog.Println(err)
-			continue
-		}
-		err = json.Unmarshal(byteJson, &bw)
-		if err != nil {
-			props.ErrLog.Println(err)
-			continue
-		}
-		err = validate.Struct(bw)
-		if err != nil {
-			props.InfoLog.Println(fmt.Sprintf("%s file has invalid structure. Can not be used", file.Name()))
-			continue
-		}
-		tmpLang[langID] = bw
-	}
-	props.Lang = tmpLang
+	props.InfoLog.Println(fmt.Sprintf("Bot will spek next languages: %s",
+		func() string {
+			var str string
+			for k := range props.Lang {
+				str += k + " "
+			}
+			return str
+		}()))
 
-	qrbot.StartBot(*token, infoLog, errorLog)
-}
-
-// // findFile searches for files whose names match  any language code and have the "ext" extension
-func findFile(targetDir string, ext string) {
-
+	fmt.Println("FINISHED")
+	//qrbot.StartBot(&props)
 }
