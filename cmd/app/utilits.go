@@ -33,7 +33,7 @@ func readLocalizationJson(props *handlers.Properties, langDir *string) {
 		if langID == "und" {
 			continue
 		}
-		props.InfoLog.Println(fmt.Sprintf("Checking for %s file \n", file.Name()))
+		props.InfoLog.Println(fmt.Sprintf("Checking for %s file", file.Name()))
 		byteJson, err := os.ReadFile(filepath.Join(*langDir, file.Name()))
 		if err != nil {
 			props.ErrLog.Println(err)
@@ -72,6 +72,8 @@ func generateJSONen() {
 			"I forgot the 2nd law of robotics ;-;\n I hope there is nothing related to QR, otherwise I will be fired.",
 			"I hope I didn't code anything evil:",
 			"01101001 00100000 01101100 01101111 01110110 01100101 00100000 01111001 01101111 01110101:"},
+		OptionsMsg: "Set me up, set me up completely",
+		QRTypeMsg:  "Choose what type of QR to create",
 	}
 	file, _ := json.MarshalIndent(RuBotResponses, "", " ")
 	_ = ioutil.WriteFile("en.json", file, 0644)
@@ -94,6 +96,8 @@ func generateJSONru() {
 			"Забыла 2ой закон робототехники ;-;\n Надеюсь там нет ничего связанного с QR, инче меня уволят.",
 			"Надеюсь я ничего плохого не закодировала:",
 			"01101001 00100000 01101100 01101111 01110110 01100101 00100000 01111001 01101111 01110101:"},
+		OptionsMsg: "Настривай, настривай меня полностью",
+		QRTypeMsg:  "Выбери какой тип QR мне создавать",
 	}
 	file, _ := json.MarshalIndent(RuBotResponses, "", " ")
 	_ = ioutil.WriteFile("ru.json", file, 0644)
