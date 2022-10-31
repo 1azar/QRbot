@@ -2,6 +2,7 @@ package main
 
 import (
 	"QRbot/handlers"
+	"QRbot/internal/qrbot"
 	"context"
 	"flag"
 	"fmt"
@@ -62,9 +63,9 @@ func main() {
 
 	// reading token from system variable or flag value:
 	props.InfoLog.Println("Reading token..")
-	tmp := os.Getenv(*token)
-	if tmp != "" {
-		token = &tmp
+	tmpT := os.Getenv(*token)
+	if tmpT != "" {
+		token = &tmpT
 	}
 	if *token == "" {
 		props.ErrLog.Fatal("Can not read token.")
@@ -73,9 +74,9 @@ func main() {
 
 	// reading mongoDB uri from system variable or flag value:
 	props.InfoLog.Println("Reading MongoDB connection URI..")
-	tmp = os.Getenv(*mongoURI)
-	if tmp != "" {
-		mongoURI = &tmp
+	tmpM := os.Getenv(*mongoURI)
+	if tmpM != "" {
+		mongoURI = &tmpM
 	}
 	if *mongoURI == "" {
 		props.ErrLog.Fatal("Can not read mongoDB URI.")
@@ -96,12 +97,13 @@ func main() {
 		props.ErrLog.Fatal(err)
 	}
 	props.InfoLog.Println("Data Base Successfully connected and pinged.")
-	// test inserting
-	rez, err := props.DB.CreateDefaultSettings(1)
-	if err != nil {
-		props.ErrLog.Fatal(err)
-	}
-	fmt.Println(rez)
+
+	//// test inserting
+	//rez, err := props.DB.CreateDefaultSettings(1)
+	//if err != nil {
+	//	props.ErrLog.Fatal(err)
+	//}
+	//fmt.Println(rez)
 
 	//searching and reading localization .json files:
 	readLocalizationJson(&props, langDir)
@@ -118,6 +120,6 @@ func main() {
 			return str
 		}()))
 
-	fmt.Println("FINISHED")
-	//qrbot.StartBot(&props)
+	//fmt.Println("FINISHED")
+	qrbot.StartBot(&props)
 }

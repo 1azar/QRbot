@@ -20,6 +20,10 @@ func (us UserSettingModel) CreateDefaultSettings(userID int64) (interface{}, err
 	return result.InsertedID, err
 }
 
+func (us UserSettingModel) setSettings(userID int64, settings QRSettings) error {
+	// stop
+}
+
 //func toDoc(v interface{}) (doc *bson.Document, err error) {
 //	data, err := bson.Marshal(v)
 //	if err != nil {

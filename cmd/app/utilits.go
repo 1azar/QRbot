@@ -72,8 +72,11 @@ func generateJSONen() {
 			"I forgot the 2nd law of robotics ;-;\n I hope there is nothing related to QR, otherwise I will be fired.",
 			"I hope I didn't code anything evil:",
 			"01101001 00100000 01101100 01101111 01110110 01100101 00100000 01111001 01101111 01110101:"},
-		OptionsMsg: "Set me up, set me up completely",
-		QRTypeMsg:  "Choose what type of QR to create",
+		OptionsMsg:   "Set me up, set me up completely",
+		QRTypeMsg:    "Choose what type of QR to create",
+		CellShapeMsg: "Choose QR Cell shape",
+		BGColorMsg:   "Choose QR background color",
+		FGColorMsg:   "Choose QR face ground color",
 	}
 	file, _ := json.MarshalIndent(RuBotResponses, "", " ")
 	_ = ioutil.WriteFile("en.json", file, 0644)
@@ -96,8 +99,11 @@ func generateJSONru() {
 			"Забыла 2ой закон робототехники ;-;\n Надеюсь там нет ничего связанного с QR, инче меня уволят.",
 			"Надеюсь я ничего плохого не закодировала:",
 			"01101001 00100000 01101100 01101111 01110110 01100101 00100000 01111001 01101111 01110101:"},
-		OptionsMsg: "Настривай, настривай меня полностью",
-		QRTypeMsg:  "Выбери какой тип QR мне создавать",
+		OptionsMsg:   "Настривай, настривай меня полностью",
+		QRTypeMsg:    "Выбери какой тип QR мне создавать",
+		CellShapeMsg: "Выбери какой тип ячеек для QR",
+		BGColorMsg:   "Выбери цвет фона QR",
+		FGColorMsg:   "Выбери цвет QR",
 	}
 	file, _ := json.MarshalIndent(RuBotResponses, "", " ")
 	_ = ioutil.WriteFile("ru.json", file, 0644)

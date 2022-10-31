@@ -53,3 +53,38 @@ func (p Properties) ChangeQRTypeToHalftone(c tele.Context) error {
 	//TODO change User QR Type to "halftone"
 	return c.Send(p.BotResponses(c.Sender().LanguageCode).OptionsMsg, &p.OptionsSelector)
 }
+
+// ChangeCellShape method process click on Cell Shape option button
+// and respond with list of inline buttons which represent all possible cell shapes for QR
+func (p Properties) ChangeCellShape(c tele.Context) error {
+	p.debugLog(fmt.Sprintf("ChangeCellShape for user:%X\t[%s]", c.Sender().ID, c.Sender().LanguageCode))
+	return c.Edit(p.BotResponses(c.Sender().LanguageCode).CellShapeMsg, &p.CellShapeSelector)
+}
+
+// ChangeCellShapeToCircle method set "Circle" qr shape
+func (p Properties) ChangeCellShapeToCircle(c tele.Context) error {
+	p.debugLog(fmt.Sprintf("ChangeCellShapeToCircle for user:%X\t[%s]", c.Sender().ID, c.Sender().LanguageCode))
+	//TODO change User cell shape to "circle"
+	return c.Send(p.BotResponses(c.Sender().LanguageCode).OptionsMsg, &p.OptionsSelector)
+}
+
+// ChangeCellShapeToSquare method set "Square" qr shape
+func (p Properties) ChangeCellShapeToSquare(c tele.Context) error {
+	p.debugLog(fmt.Sprintf("ChangeCellShapeToSquare for user:%X\t[%s]", c.Sender().ID, c.Sender().LanguageCode))
+	//TODO change User cell shape to "square"
+	return c.Send(p.BotResponses(c.Sender().LanguageCode).OptionsMsg, &p.OptionsSelector)
+}
+
+// ChangeBGColor method process click on BG Color option button
+// and respond with list of inline buttons which represent all possible colors for QR BG
+func (p Properties) ChangeBGColor(c tele.Context) error {
+	p.debugLog(fmt.Sprintf("ChangeBGColor for user:%X\t[%s]", c.Sender().ID, c.Sender().LanguageCode))
+	return c.Edit(p.BotResponses(c.Sender().LanguageCode).BGColorMsg, &p.ColorSelector)
+}
+
+// ChangeCellShapeToCircle method set "Circle" qr shape
+func (p Properties) ChangeBGColorTo(c tele.Context) error {
+	p.debugLog(fmt.Sprintf("ChangeCellShapeToCircle for user:%X\t[%s]", c.Sender().ID, c.Sender().LanguageCode))
+	//TODO change User cell shape to "circle"
+	return c.Send(p.BotResponses(c.Sender().LanguageCode).OptionsMsg, &p.OptionsSelector)
+}
