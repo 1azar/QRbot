@@ -1,18 +1,42 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/1azar/QRChan/domain"
 	"github.com/1azar/go-qrcode/writer/standard"
 	"github.com/yeqown/go-qrcode/v2"
 	"image"
 	"image/color"
+	"io"
 	"os"
 )
 
 type ct func(interface{}) standard.ImageOption
 
 type bufWriteCloser struct {
+	bufferValue *bytes.Buffer
+}
+
+func (bf bufWriteCloser) Write(p []byte) (n int, err error) {
+	bf.bufferValue.Write(p)
+	return len(p), nil
+}
+
+func (bf bufWriteCloser) Close() error {
+	return nil
+}
+
+type nopWriteCloser struct {
+	io.Writer
+}
+
+func (_ nopWriteCloser) Close() error {
+	return nil
+}
+
+func NopWriteCloser(writer io.Writer) io.WriteCloser {
+	return nopWriteCloser{writer}
 }
 
 func main() {
@@ -70,6 +94,13 @@ func main() {
 
 	w, err := standard.New("testQR50.jpeg", optFuns...)
 
+	//var b2 bufWriteCloser // СТАРЫЙ ВАРИАНТ
+	//b2 := &bufWriteCloser{}
+	var buf bytes.Buffer
+	var b2 io.WriteCloser = NopWriteCloser(&buf)
+
+	w2 := standard.NewWithWriter(b2, optFuns...)
+
 	if err != nil {
 		fmt.Printf("standard.New failed: %v", err)
 		return
@@ -80,6 +111,10 @@ func main() {
 	if err = qrc.Save(w); err != nil {
 		fmt.Printf("could not save image: %v", err)
 	}
+	if err = qrc.Save(w2); err != nil {
+		fmt.Printf("could not save image as []bytes: %v", err)
+	}
+	fmt.Println(1)
 }
 
 type QRGeneratorByYeqown struct {
