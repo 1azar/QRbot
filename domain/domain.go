@@ -4,8 +4,8 @@ package domain
 import "image/color"
 
 type QRSettingsRepository interface {
-	Store(settings QRSettings)
-	FindById(id int64) QRSettingsRepository
+	Store(settings QRSettings) error
+	FindById(id int64) (QRSettings, error)
 }
 
 type QRGenerator interface {
@@ -13,7 +13,8 @@ type QRGenerator interface {
 }
 
 type QRSettings struct {
-	Id              int64
+	ID              int64 //ID must be the same for User id
+	Text            string
 	QRType          qrType
 	CellShape       cellShape
 	BackGroundColor color.RGBA
@@ -22,9 +23,9 @@ type QRSettings struct {
 	ImgFormat       imgFormat
 }
 
-func NewQRSettings(id int64) *QRSettings {
-	return &QRSettings{
-		Id: id,
+func NewQRSettings(id int64) QRSettings {
+	return QRSettings{
+		ID: id,
 		QRType: qrType{
 			Name: Normal,
 			Img:  nil,
@@ -43,17 +44,13 @@ func NewQRSettings(id int64) *QRSettings {
 			A: 0xff,
 		},
 		BorderWidth: qrBorders{
-			WidthType: Percent,
+			WidthType: Pixel,
 			Value:     20,
 		},
 		ImgFormat: Jpeg,
 	}
 }
 
-type Client struct {
-	Id int64
-}
-
 type QR struct {
-	data []byte //TODO check how to implement image container or snt like that
+	Data []uint8
 }

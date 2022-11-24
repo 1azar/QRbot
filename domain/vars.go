@@ -10,6 +10,17 @@ const (
 	Percent
 )
 
+func (b borderWidthType) String() string {
+	switch b {
+	case Pixel:
+		return "pix"
+	case Percent:
+		return "%"
+	default:
+		return "Unknown"
+	}
+}
+
 // A qrBorders represent border thickness of qr
 type qrBorders struct {
 	WidthType borderWidthType
@@ -25,6 +36,19 @@ const (
 	Halftone
 )
 
+func (qt qrTypeName) String() string {
+	switch qt {
+	case Normal:
+		return "Normal"
+	case WithLogo:
+		return "WithLogo"
+	case Halftone:
+		return "Halftone"
+	default:
+		return "Unknown"
+	}
+}
+
 type qrType struct {
 	Name qrTypeName
 	Img  image.Image
@@ -37,6 +61,17 @@ const (
 	Circle cellShape = iota
 	Rectangle
 )
+
+func (c cellShape) String() string {
+	switch c {
+	case Circle:
+		return "Circle"
+	case Rectangle:
+		return "Rectangle"
+	default:
+		return "Unknown"
+	}
+}
 
 // A imgFormat represent resulting qr image format
 type imgFormat int
