@@ -20,7 +20,7 @@ func (l Logger) Error(str ...any) {
 
 func NewLogger() Logger {
 	return Logger{
-		logInfo:  log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime),
-		logError: log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile),
+		logInfo:  log.New(os.Stdout, "[SER] INFO\t", log.Ldate|log.Ltime),
+		logError: log.New(os.Stderr, "[SER] ERROR\t", log.Ldate|log.Ltime|log.Lshortfile),
 	}
 }

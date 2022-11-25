@@ -14,7 +14,7 @@ type Logger interface {
 type QRInteract struct {
 	qrSettingsRepository domain.QRSettingsRepository
 	QRSettingsBuffer     QRSettingsBuffer //QRSettingsBuffer
-	logger               Logger
+	Logger               Logger
 }
 
 func NewQRInteract(
@@ -26,7 +26,7 @@ func NewQRInteract(
 	qs := QRInteract{
 		qrSettingsRepository: qrSettingsRepository,
 		QRSettingsBuffer:     *NewQrSettingsBuffer(qsBufferErasingPeriodMinutes),
-		logger:               logger,
+		Logger:               logger,
 	}
 	return &qs
 }
@@ -34,10 +34,10 @@ func NewQRInteract(
 // StoreQRSettings settings should be sent by web or bot interfaces
 func (interactor *QRInteract) StoreQRSettings(qs domain.QRSettings) error {
 	if err := interactor.qrSettingsRepository.Store(qs); err != nil {
-		interactor.logger.Info(fmt.Sprintf("Could not sotre QR Settings in the Repository for user:%v\n%+v", qs.ID, qs))
+		interactor.Logger.Info(fmt.Sprintf("Could not sotre QR Settings in the Repository for user:%v\n%+v", qs.ID, qs))
 		return err
 	}
-	interactor.logger.Info(fmt.Sprintf("Stored QR Settings in the Repository for user: %v", qs.ID))
+	interactor.Logger.Info(fmt.Sprintf("Stored QR Settings in the Repository for user: %v", qs.ID))
 	return nil
 }
 
@@ -46,18 +46,18 @@ func (interactor *QRInteract) StoreQRSettings(qs domain.QRSettings) error {
 func (interactor *QRInteract) FindQRSettings(id int64) (domain.QRSettings, error) {
 	qs, err := interactor.qrSettingsRepository.FindById(id)
 	if err != nil {
-		interactor.logger.Error(fmt.Sprintf("Error during searching QR Settings in the Repository for user: %v", id))
+		interactor.Logger.Error(fmt.Sprintf("Error during searching QR Settings in the Repository for user: %v", id))
 		return domain.QRSettings{}, err
 	}
 	if qs == (domain.QRSettings{}) {
-		interactor.logger.Info(fmt.Sprintf("Could not find QR Settings in the repository for user: %v", id))
+		interactor.Logger.Info(fmt.Sprintf("Could not find QR Settings in the repository for user: %v", id))
 		return interactor.NewQRSettings(id), nil
 	}
-	interactor.logger.Info(fmt.Sprintf("Found QR Settings in the Repository for user: %v\n%+v", id, qs))
+	interactor.Logger.Info(fmt.Sprintf("Found QR Settings in the Repository for user: %v\n%+v", id, qs))
 	return qs, nil
 }
 
 func (interactor *QRInteract) NewQRSettings(id int64) domain.QRSettings {
-	interactor.logger.Info(fmt.Sprintf("Generating new QRSettings for user: %v", id))
+	interactor.Logger.Info(fmt.Sprintf("Generating new QRSettings for user: %v", id))
 	return domain.NewQRSettings(id)
 }

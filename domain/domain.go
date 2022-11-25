@@ -52,5 +52,5 @@ func NewQRSettings(id int64) QRSettings {
 }
 
 type QR struct {
-	Data []uint8
+	Data []byte
 }

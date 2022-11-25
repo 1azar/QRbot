@@ -22,12 +22,12 @@ func NopWriteCloser(writer io.Writer) io.WriteCloser {
 }
 
 // GenerateQR function generates QR struct.
-func GenerateQR(settings domain.QRSettings, logger usecases.Logger) domain.QR {
+func GenerateQR(settings domain.QRSettings, logger usecases.Logger) (domain.QR, error) {
 
 	qrc, err := qrcode.New(settings.Text)
 	if err != nil {
 		logger.Error("could not generate QRCode: ", err)
-		return domain.QR{}
+		return domain.QR{}, err
 	}
 
 	opt := parsDomainQRSettings(settings)
@@ -39,12 +39,12 @@ func GenerateQR(settings domain.QRSettings, logger usecases.Logger) domain.QR {
 
 	if err = qrc.Save(w); err != nil {
 		logger.Error("could not write image: ", err)
-		return domain.QR{}
+		return domain.QR{}, err
 	}
 
 	return domain.QR{
 		Data: buf.Bytes(),
-	}
+	}, nil
 }
 
 func parsDomainQRSettings(settings domain.QRSettings) []standard.ImageOption {

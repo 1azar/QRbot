@@ -24,6 +24,7 @@ type Properties struct {
 	QRTypeSelector    tele.ReplyMarkup //QRTypeSelector contains inline buttons that represent list of possible types for qr
 	CellShapeSelector tele.ReplyMarkup //CellShapeSelector contains inline buttons that represent list of possible cell shapes for qr
 	//ColorSelector     tele.ReplyMarkup //ColorSelector contains inline buttons that represent list of possible colors for qr
+	NoChooseSelector tele.ReplyMarkup //NoChooseSelector contains inline button with only one agreement option
 }
 
 // BotResponses method returns pointer to BotsWords included in Lang field of Properties type.
@@ -54,4 +55,12 @@ type BotsWords struct {
 	CellShapeMsg string   `json:"cell_shape_msg" validate:"required"` //TODO CellShapeMsg: bot say that when user entering the cell shape changing menu
 	BGColorMsg   string   `json:"bg_color_msg" validate:"required"`   //TODO BGColorMsg: bot say that when user entering the BG color changing menu
 	FGColorMsg   string   `json:"fg_color_msg" validate:"required"`   //TODO FGColorMsg: bot say that when user entering the FG color changing menu
+}
+
+// GetReadyMsg returns random element of ReadyMsg of BotsWords struct field
+func (bw *BotsWords) GetReadyMsg() string {
+	for _, bw := range bw.ReadyMsg {
+		return bw
+	}
+	return bw.ReadyMsg[0]
 }

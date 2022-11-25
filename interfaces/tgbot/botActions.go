@@ -1,8 +1,10 @@
 package tgbot
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/1azar/QRChan/domain"
+	"github.com/1azar/QRChan/infrastructure"
 	tele "gopkg.in/telebot.v3"
 )
 
@@ -76,6 +78,7 @@ func (p Properties) ChangeQRType(c tele.Context) error {
 func (p Properties) ChangeQRTypeToNormal(c tele.Context) error {
 	msg, err := p.handlerWrapper(func(qs *domain.QRSettings) {
 		qs.QRType.Name = domain.Normal
+		qs.QRType.Img = nil
 	})(c.Sender().ID)
 	if err != nil {
 		return err
@@ -132,13 +135,13 @@ func (p Properties) ChangeCellShapeToSquare(c tele.Context) error {
 	if err != nil {
 		return err
 	}
-	return c.Send(p.BotResponses(c.Sender().LanguageCode).OptionsMsg+"\n"+msg, &p.OptionsSelector, tele.ModeHTML)
+	return c.Edit(p.BotResponses(c.Sender().LanguageCode).OptionsMsg+"\n"+msg, &p.OptionsSelector, tele.ModeHTML)
 }
 
 // ChangeBGColor method process click on BG Color option button
 func (p Properties) ChangeBGColor(c tele.Context) error {
 	//return c.Edit(p.BotResponses(c.Sender().LanguageCode).BGColorMsg, &p.ColorSelector)
-	return c.Edit(p.BotResponses(c.Sender().LanguageCode).BGColorMsg)
+	return c.Edit("This part has not been implemented! DO NOT LOOK!", &p.NoChooseSelector)
 }
 
 //// ChangeBGColorTo method process qr bg color changing
@@ -149,7 +152,7 @@ func (p Properties) ChangeBGColor(c tele.Context) error {
 
 // ChangeFGColor method process click on FG Color option button
 func (p Properties) ChangeFGColor(c tele.Context) error {
-	return c.Edit(p.BotResponses(c.Sender().LanguageCode).BGColorMsg)
+	return c.Edit("This part has not been implemented! DO NOT LOOK!", &p.NoChooseSelector)
 }
 
 //// ChangeFGColorTo method process qr fg color changing
@@ -157,3 +160,32 @@ func (p Properties) ChangeFGColor(c tele.Context) error {
 //	//TODO change User cell shape to "circle"
 //	return c.Send(p.BotResponses(c.Sender().LanguageCode).OptionsMsg, &p.OptionsSelector)
 //}
+
+// NoChoose method process click on btnYesMaam - must return user to options menu
+func (p Properties) NoChoose(c tele.Context) error {
+	qs, err := p.processQRSettingsSearch(c.Sender().ID)
+	if err != nil {
+		return err
+	}
+	p.QRInteractor.QRSettingsBuffer.Set(qs.ID, qs) // now qr setting is buffered for current user.
+	msg := generateOptionsMenuText(qs)
+	return c.Edit(p.BotResponses(c.Sender().LanguageCode).OptionsMsg+"\n"+msg, &p.OptionsSelector, tele.ModeHTML)
+}
+
+// OnText method process any incoming text messages
+func (p Properties) OnText(c tele.Context) error {
+	qs, err := p.processQRSettingsSearch(c.Sender().ID)
+	if err != nil {
+		return err
+	}
+	qs.Text = c.Text()
+
+	var QR domain.QR
+	QR, err = infrastructure.GenerateQR(qs, p.QRInteractor.Logger)
+	if err != nil {
+		return err
+	}
+
+	photo := &tele.Photo{File: tele.FromReader(bytes.NewReader(QR.Data))}
+	return c.Send(photo, p.BotResponses(c.Sender().LanguageCode).GetReadyMsg(), &p.GeneralSelector, tele.ModeHTML)
+}

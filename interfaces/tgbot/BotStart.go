@@ -31,13 +31,16 @@ func StartBot(props *Properties) {
 	btnExitOptions := props.OptionsSelector.Data("✅SAVE", "btnExitOptions")
 
 	// QR TYPE submenu buttons:
-	optQRTypeNormal := props.OptionsSelector.Data("⬜Normal", "optQRTypeNormal")
-	optQRTypeWithLogo := props.OptionsSelector.Data("🍀With Logo", "optQRTypeWithLogo")
-	optQRTypeHalftone := props.OptionsSelector.Data("🌓Halftone", "optQRTypeHalftone")
+	btnQRTypeNormal := props.OptionsSelector.Data("⬜Normal", "btnQRTypeNormal")
+	btnQRTypeWithLogo := props.OptionsSelector.Data("🍀With Logo", "btnQRTypeWithLogo")
+	btnQRTypeHalftone := props.OptionsSelector.Data("🌓Halftone", "btnQRTypeHalftone")
 
 	// Cell Shape submenu buttons:
-	optCellShapeCircle := props.OptionsSelector.Data("🏐Circle", "optCellShapeCircle")
-	optCellShapeSquare := props.OptionsSelector.Data("🥅Square", "optCellShapeRectangle")
+	btnCellShapeCircle := props.OptionsSelector.Data("🏐Circle", "btnCellShapeCircle")
+	btnCellShapeSquare := props.OptionsSelector.Data("🥅Square", "optCellShapeRectangle")
+
+	// No choose submitting submenu: fixme temporary
+	btnYesMaam := props.OptionsSelector.Data("Yes ma'am ಥ_ಥ", "optYesMaam")
 
 	/*
 		// Color submenu buttons:
@@ -64,14 +67,18 @@ func StartBot(props *Properties) {
 	)
 	// Choosing QR type layout
 	props.QRTypeSelector.Inline(
-		props.QRTypeSelector.Row(optQRTypeNormal),
-		props.QRTypeSelector.Row(optQRTypeWithLogo),
-		props.QRTypeSelector.Row(optQRTypeHalftone),
+		props.QRTypeSelector.Row(btnQRTypeNormal),
+		props.QRTypeSelector.Row(btnQRTypeWithLogo),
+		props.QRTypeSelector.Row(btnQRTypeHalftone),
 	)
 	// Choosing Cell Shape layout
 	props.CellShapeSelector.Inline(
-		props.CellShapeSelector.Row(optCellShapeCircle),
-		props.CellShapeSelector.Row(optCellShapeSquare),
+		props.CellShapeSelector.Row(btnCellShapeCircle),
+		props.CellShapeSelector.Row(btnCellShapeSquare),
+	)
+	// No Choose layout
+	props.NoChooseSelector.Inline(
+		props.NoChooseSelector.Row(btnYesMaam),
 	)
 
 	/*
@@ -82,6 +89,9 @@ func StartBot(props *Properties) {
 			props.ColorSelector.Row(optBGColorOrange, optBGColorYellow, optBGColorBrown),
 		)
 	*/
+	//	b.Handle(tele.OnText, func(c tele.Context) error {
+	//	return c.Send("Hello!")
+	//})
 
 	// commands:
 	b.Handle("/start", props.OnstartChat)
@@ -92,23 +102,25 @@ func StartBot(props *Properties) {
 	b.Handle(&btnGetOptions, props.StartOptionsMenu)
 	//// OPTIONS->QR TYPE:
 	b.Handle(&btnQRType, props.ChangeQRType)
-	b.Handle(&optQRTypeNormal, props.ChangeQRTypeToNormal)
-	b.Handle(&optQRTypeWithLogo, props.ChangeQRTypeToWithLogo)
-	//b.Handle(&optQRTypeHalftone, props.ChangeQRTypeToHalftone)
+	b.Handle(&btnQRTypeNormal, props.ChangeQRTypeToNormal)
+	b.Handle(&btnQRTypeWithLogo, props.ChangeQRTypeToWithLogo) // TODO unfinished
+	b.Handle(&btnQRTypeHalftone, props.ChangeQRTypeToHalftone) // TODO unfinished
 	// OPTIONS->CELL SHAPE:
 	b.Handle(&btnQRCellShape, props.ChangeCellShape)
-	b.Handle(&optCellShapeCircle, props.ChangeCellShapeToCircle)
-	b.Handle(&optCellShapeSquare, props.ChangeCellShapeToSquare)
-	//// OPTIONS->BG COLOR
-	//b.Handle(&btnQRBGColor, props.ChangeBGColor)
-	//// OPTIONS->FG COLOR
-	//b.Handle(&btnQRBGColor, props.ChangeFGColor)
+	b.Handle(&btnCellShapeCircle, props.ChangeCellShapeToCircle)
+	b.Handle(&btnCellShapeSquare, props.ChangeCellShapeToSquare)
+	// OPTIONS->BG COLOR
+	b.Handle(&btnQRBGColor, props.ChangeBGColor) // TODO unfinished
+	// OPTIONS->FG COLOR
+	b.Handle(&btnQRFGColor, props.ChangeFGColor) // TODO unfinished
 	//// OPTIONS->BORDER SIZE
 	//b.Handle(&btnQRBGColor, props.ChangeBorderSize)
 	// OPTIONS -> EXIT
 	b.Handle(&btnExitOptions, props.ExitOptions)
+	// OPTIONS -> Yes Ma'am (returns to option menu)
+	b.Handle(&btnYesMaam, props.NoChoose)
 
-	//b.Handle(tele.OnText, MessageProcessing)
+	b.Handle(tele.OnText, props.OnText)
 
 	props.BotInfoLog.Println("Bot started")
 	b.Start()
