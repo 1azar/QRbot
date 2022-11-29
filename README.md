@@ -12,10 +12,17 @@ Unlike [v.0](https://github.com/1azar/QRbot/tree/v.0), the code in this [v.1](ht
 I contains 4 specific packages (exept `main`):
 
 ## `domain pkg`
-Contains the most stable entities dictated by business rules. This pkg has no external dependances. These are the QR settings structure for the user, the interface for the QR repository, the interface for the QR generator, and the QR entity. Also here declarated some constants.
+Contains the most stable entities dictated by business rules. This pkg has no external dependances. These are:
+- The `QR settings structure` for the user. Also has constructor for default QR settings for new users.
+- The `interface of QR repository`.
+- The `interface of QR generator`.
+- The `QR entity`. 
+- Also here declarated some `constants`.
 
 ## `usecases pkg`
-
+Contains application specific business rules. It encapsulates and implements all of the use cases of the app. These use cases orchestrate the flow of data to and from the entities. The following is implemented here:
+- `Logger interface`. 
+- `QR interactor struct`. Countains `QR Settings repository` within (domain entity), `QR Settings Buffer` - special struct which is needed to reduce data base interaction during setting QR Options by user. `Logger` to log important events of the app. Also `Find` and `Store` methods.
   
 
 
