@@ -33,3 +33,6 @@ Needed to interact with outer world. In current version the service can only wor
 ## `main pkg`
 Just reads all it needs from system variables (tokens, db keys etc.). Adapt every interfaces in domain and usecases packages with its implementations from infrastructure and interfaces.
 
+# TODO
+- [ ] README spellchecking
+- [ ] Add db model
