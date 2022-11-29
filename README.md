@@ -24,5 +24,12 @@ Contains application specific business rules. It encapsulates and implements all
 - `Logger interface`. 
 - `QR interactor struct`. Countains `QR Settings repository` within (domain entity), `QR Settings Buffer` - special struct which is needed to reduce data base interaction during setting QR Options by user. `Logger` to log important events of the app. Also `Find` and `Store` methods.
   
+## `infrastructure pkg`
+Contains all implementations for every interfaces which was declarated in the packages above. Those all will be adapted to them in the main.go file of the app. It can be data base models, loggers, QR generating functions etc.
 
+## `interfaces pkg`
+Needed to interact with outer world. In current version the service can only work as telegram bot. So this package has functionality only for interactiong with telegram. But if i would like to make the service to work on web site then it will just require implementationg new interface to work with site. There woll be no need to change any existing code base. Everything related with telegram are located here.
+
+## `main pkg`
+Just reads all it needs from system variables (tokens, db keys etc.). Adapt every interfaces in domain and usecases packages with its implementations from infrastructure and interfaces.
 
