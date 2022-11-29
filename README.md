@@ -3,6 +3,8 @@ This is a repository of a study project created as part of learning the golang p
 Telegram bot that creates a QR according to the text sent to it. It also has special settings for customization.
 The QR generator was taken from [yeqown/go-qrcode](https://github.com/yeqown/go-qrcode) but further a little bit modified [1azar/go-qrcode](https://github.com/1azar/go-qrcode/tree/WithHalfTone-File-Image).
 
+> This project is not finished yet
+
 ![QR Chan gif](https://github.com/1azar/QRbot/blob/v.1/assets/qrchan.gif)
 
 # Implementation Details
